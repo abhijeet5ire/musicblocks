@@ -125,6 +125,9 @@ class Logo {
         this.oscilloscopeTurtles = [];
         this.meterWidget = null;
         this.statusMatrix = null;
+        this.aiMusicBlocks=null;
+
+
 
         this.evalFlowDict = {};
         this.evalArgDict = {};
