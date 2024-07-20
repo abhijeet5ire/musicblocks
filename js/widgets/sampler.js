@@ -22,7 +22,7 @@
  * Represents a Sample Widget.
  * @constructor
  */
-function SampleWidget() {
+function AIWidget() {
     const ICONSIZE = 32;
     const SAMPLEWIDTH = 800;
     const SAMPLEHEIGHT = 400;
@@ -308,7 +308,7 @@ function SampleWidget() {
         }
 
         this.drawVisualIDs = {};
-        const widgetWindow = window.widgetWindows.windowFor(this, "sample");
+        const widgetWindow = window.widgetWindows.windowFor(this, "AI");
         this.widgetWindow = widgetWindow;
         this.divisions = [];
         widgetWindow.clear();
@@ -847,59 +847,51 @@ function SampleWidget() {
      * @returns {void}
      */
     this.makeCanvas = function (width, height, turtleIdx, resized) {
+        // Create a container to center the elements
+        const container = document.createElement("div");
+  
+        this.widgetWindow.getWidgetBody().appendChild(container);
+    
+        // Create the canvas element
         const canvas = document.createElement("canvas");
         canvas.height = height;
         canvas.width = width;
         canvas.className = "samplerCanvas";
-        this.widgetWindow.getWidgetBody().appendChild(canvas);
+        canvas.style.marginBottom = "10px";
+        container.appendChild(canvas);
+    
+        // Create the input text field
+        const inputField = document.createElement("input");
+        inputField.type = "text";
+        inputField.className = "inputField";
+        inputField.placeholder = "Enter text here";
+        inputField.style.fontSize = "20px";
+        inputField.style.padding = "10px";
+        inputField.style.marginLeft="180px";
+        inputField.style.marginBottom = "10px";
+        container.appendChild(inputField);
+      // Ensure inputField focuses when clicked
+      inputField.addEventListener('click', function() {
+        inputField.focus();
+    });
+        // Create the submit button
+        const submitButton = document.createElement("button");
+        submitButton.className = "submitButton";
+        submitButton.textContent = "Submit";
+        submitButton.style.fontSize = "20px";
+        submitButton.style.padding = "10px 20px";
+        container.appendChild(submitButton);
+    
+        // Get the canvas context
         const canvasCtx = canvas.getContext("2d");
         canvasCtx.clearRect(0, 0, width, height);
-
-        const draw = () => {
-            this.drawVisualIDs[turtleIdx] = requestAnimationFrame(draw);
-            if (this.pitchAnalysers[turtleIdx] && (this.running || resized)) {
-                canvasCtx.fillStyle = "#FFFFFF";
-                canvasCtx.font = "10px Verdana";
-                this.verticalOffset = -canvas.height / 4;
-                this.zoomFactor = 40.0;
-                canvasCtx.fillRect(0, 0, width, height);
-
-                let oscText;
-                if (turtleIdx > 0) {
-                    //.TRANS: The sound sample that the user uploads.
-                    oscText = this.sampleName != "" ? this.sampleName : _("sample");
-                }
-                canvasCtx.fillStyle = "#000000";
-                //.TRANS: The reference tone is a sound used for comparison.
-                canvasCtx.fillText(_("reference tone"), 10, 10);
-                canvasCtx.fillText(oscText, 10, canvas.height / 2 + 10);
-
-                for (let turtleIdx = 0; turtleIdx < 2; turtleIdx += 1) {
-                    const dataArray = this.pitchAnalysers[turtleIdx].getValue();
-                    const bufferLength = dataArray.length;
-                    const rbga = SAMPLEOSCCOLORS[turtleIdx];
-                    const sliceWidth = (width * this.zoomFactor) / bufferLength;
-                    canvasCtx.lineWidth = 2;
-                    canvasCtx.strokeStyle = rbga;
-                    canvasCtx.beginPath();
-
-                    let x = 0;
-
-                    for (let i = 0; i < bufferLength; i++) {
-                        const y = (height / 2) * (1 - dataArray[i]) + this.verticalOffset;
-                        if (i === 0) {
-                            canvasCtx.moveTo(x, y);
-                        } else {
-                            canvasCtx.lineTo(x, y);
-                        }
-                        x += sliceWidth;
-                    }
-                    canvasCtx.lineTo(canvas.width, canvas.height / 2);
-                    canvasCtx.stroke();
-                    this.verticalOffset = canvas.height / 4;
-                }
-            }
+    
+        // Function to handle the submit button click
+        submitButton.onclick = function () {
+            const inputText = inputField.value;
+            alert("Submitted text: " + inputText); // Replace this with the actual function you want to call
         };
-        draw();
     };
+    
+    
 }
