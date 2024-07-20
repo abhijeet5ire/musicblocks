@@ -1652,8 +1652,9 @@ function setupWidgetBlocks(activity) {
         new MatrixGMajorBlock().setup(activity);
         new MatrixCMajorBlock().setup(activity);
         new MatrixBlock().setup(activity);
+        new AIMusicMaker().setup(activity);
     }
     // Instantiate and set up the StatusBlock
     new StatusBlock().setup(activity);
-    new AIMusicMaker().setup(activity);
+    
 }
